@@ -1,0 +1,12 @@
+# Dependencies and build output.
+node_modules/
+dist/
+target/
+*.tsbuildinfo
+
+# Local secrets.
+.env
+.env.*
+
+# macOS.
+.DS_Store
