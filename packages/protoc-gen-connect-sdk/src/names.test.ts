@@ -18,14 +18,18 @@ describe("namespaceFor", () => {
     ["BatchService", "batches"],
     // Already plural, so it is left alone rather than doubled.
     ["AnalyticsService", "analytics"],
+    // Irregular plurals, which are why pluralization is not a local rule.
+    ["PersonService", "people"],
+    ["ChildService", "children"],
+    ["StatusService", "statuses"],
     // A service named without the suffix still names its resource.
     ["Greeter", "greeters"],
   ])("%s -> %s", ([service, expected]) => {
     expect(namespaceFor(service!)).toBe(expected);
   });
 
-  test("an override replaces a plural the rule gets wrong", () => {
-    expect(namespaceFor("PersonService", "people")).toBe("people");
+  test("an override replaces the derived plural", () => {
+    expect(namespaceFor("WorkspaceService", "projects")).toBe("projects");
   });
 });
 
@@ -67,6 +71,18 @@ describe("methodFor", () => {
     // entity, so removing it would name them `listEntity` and `getEntity`.
     ["ListEntityExports", "exports", "listEntityExports"],
     ["GetWorkspaceExport", "exports", "getWorkspaceExport"],
+  ])("%s in %s -> %s", ([method, namespace, expected]) => {
+    expect(methodFor(method!, namespace!)).toBe(expected);
+  });
+
+  test.for([
+    // An irregular namespace still matches its own singular and plural.
+    ["ListPeople", "people", "list"],
+    ["GetPerson", "people", "get"],
+    ["ListChildren", "children", "list"],
+    ["GetChild", "children", "get"],
+    // The namespace names the resource, so what is left joins the verb.
+    ["GetStatusHistory", "statuses", "getHistory"],
   ])("%s in %s -> %s", ([method, namespace, expected]) => {
     expect(methodFor(method!, namespace!)).toBe(expected);
   });
