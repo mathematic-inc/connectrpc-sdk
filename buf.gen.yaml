@@ -1,0 +1,12 @@
+# Bindings for this repository's own annotations, which the generators read to
+# let a schema override a derived name.
+version: v2
+clean: true
+inputs:
+  - directory: proto
+plugins:
+  - local: node_modules/.bin/protoc-gen-es
+    out: packages/protoc-gen-connect-sdk/src/gen
+    opt:
+      - target=ts
+      - import_extension=js

@@ -1,0 +1,43 @@
+{
+  "name": "protoc-gen-connect-sdk",
+  "version": "0.1.0",
+  "description": "Generates idiomatic namespaced SDKs over ConnectRPC clients",
+  "keywords": [
+    "connectrpc",
+    "protobuf",
+    "sdk",
+    "codegen",
+    "protoc-plugin"
+  ],
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/mathematic-inc/connect-sdk.git",
+    "directory": "packages/protoc-gen-connect-sdk"
+  },
+  "license": "MIT OR Apache-2.0",
+  "type": "module",
+  "bin": {
+    "protoc-gen-connect-sdk": "./dist/protoc-gen-connect-sdk.js"
+  },
+  "files": [
+    "dist",
+    "README.md",
+    "LICENSE-MIT",
+    "LICENSE-APACHE"
+  ],
+  "scripts": {
+    "build": "tsc -p tsconfig.build.json",
+    "test": "vitest run"
+  },
+  "dependencies": {
+    "@bufbuild/protobuf": "^2.14.0",
+    "@bufbuild/protoplugin": "^2.14.0",
+    "@connectrpc/connect": "^2.1.2"
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "devDependencies": {
+    "@bufbuild/protocompile": "^0.0.1"
+  }
+}

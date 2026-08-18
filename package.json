@@ -1,0 +1,19 @@
+{
+  "name": "connect-sdk-workspace",
+  "private": true,
+  "type": "module",
+  "workspaces": [
+    "packages/*"
+  ],
+  "scripts": {
+    "build": "tsc --build",
+    "test": "vitest run",
+    "typecheck": "tsc --build"
+  },
+  "devDependencies": {
+    "@bufbuild/protoc-gen-es": "^2.14.0",
+    "typescript": "^5.9.3",
+    "vitest": "^4.1.10"
+  },
+  "packageManager": "npm@11.17.0"
+}
