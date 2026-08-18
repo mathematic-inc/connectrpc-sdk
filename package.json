@@ -6,7 +6,7 @@
     "packages/*"
   ],
   "scripts": {
-    "build": "tsc --build",
+    "build": "npm run build --workspaces",
     "test": "vitest run",
     "typecheck": "tsc --build"
   },
