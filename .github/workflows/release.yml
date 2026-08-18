@@ -1,0 +1,125 @@
+name: Release
+
+on:
+  push:
+    tags:
+      - "v*" # the npm package, protoc-gen-connect-sdk
+
+concurrency:
+  group: release-${{ github.ref }}
+  cancel-in-progress: false
+
+permissions:
+  contents: read
+
+jobs:
+  meta:
+    name: Validate release
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    permissions:
+      contents: read
+    outputs:
+      tag: ${{ steps.parse.outputs.tag }}
+      version: ${{ steps.parse.outputs.version }}
+      is_prerelease: ${{ steps.parse.outputs.is_prerelease }}
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      - id: parse
+        shell: bash
+        run: |
+          set -euo pipefail
+
+          TAG="${GITHUB_REF_NAME}"
+          VERSION="${TAG#v}"
+          MANIFEST_VERSION="$(node -p "require('./packages/protoc-gen-connect-sdk/package.json').version")"
+
+          if [[ ! "$VERSION" =~ ^[0-9]+\.[0-9]+\.[0-9]+(-[0-9A-Za-z.-]+)?$ ]]; then
+            echo "tag $TAG does not match vX.Y.Z or vX.Y.Z-rc.N" >&2
+            exit 1
+          fi
+
+          if [[ "$VERSION" != "$MANIFEST_VERSION" ]]; then
+            echo "tag version $VERSION must match manifest version $MANIFEST_VERSION" >&2
+            exit 1
+          fi
+
+          IS_PRERELEASE=false
+          if [[ "$VERSION" == *-* ]]; then
+            IS_PRERELEASE=true
+          fi
+
+          {
+            echo "tag=$TAG"
+            echo "version=$VERSION"
+            echo "is_prerelease=$IS_PRERELEASE"
+          } >> "$GITHUB_OUTPUT"
+
+  build-and-test:
+    name: Build and test
+    needs: meta
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    permissions:
+      contents: read
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      # Caching is off in release jobs, so there is no cache to poison.
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0 # zizmor: ignore[cache-poisoning]
+        with:
+          node-version-file: .node-version
+      - name: Test package
+        run: |
+          npm ci
+          npm test
+          npm run build
+
+  create-release:
+    name: Create GitHub release
+    needs: [meta, build-and-test]
+    runs-on: ubuntu-latest
+    timeout-minutes: 10
+    environment: release
+    permissions:
+      contents: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          fetch-depth: 0
+          persist-credentials: false
+      - uses: softprops/action-gh-release@b4309332981a82ec1c5618f44dd2e27cc8bfbfda # v3.0.0
+        with:
+          tag_name: ${{ needs.meta.outputs.tag }}
+          name: ${{ needs.meta.outputs.tag }}
+          generate_release_notes: true
+          prerelease: ${{ needs.meta.outputs.is_prerelease == 'true' }}
+          make_latest: ${{ needs.meta.outputs.is_prerelease == 'false' }}
+
+  publish-npm:
+    name: Publish to npm
+    needs: [meta, create-release]
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: release
+    permissions:
+      contents: read
+      # Trusted publishing: exchanged for a short-lived registry token, so no
+      # long-lived secret lives in this repo. Provenance comes with it.
+      id-token: write
+    steps:
+      - uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # v6.0.2
+        with:
+          persist-credentials: false
+      # Caching is off in release jobs, so there is no cache to poison.
+      - uses: actions/setup-node@53b83947a5a98c8d113130e565377fae1a50d02f # v6.3.0 # zizmor: ignore[cache-poisoning]
+        with:
+          node-version-file: .node-version
+          registry-url: https://registry.npmjs.org
+      - run: npm ci
+      - run: npm run build
+      - name: Publish package
+        run: npm publish --workspace protoc-gen-connect-sdk

@@ -1,5 +1,9 @@
 [tools]
+actionlint = "1.7.12"
 buf = "1.72.0"
 node = "26.7.0"
 # Pinned so the Rust generator's fixtures build against a known toolchain.
 rust = { version = "1.97.1", profile = "minimal", components = ["clippy", "rustfmt"] }
+# `actionlint` shells out to this to check `run:` blocks.
+shellcheck = "0.11.0"
+zizmor = "1.29.0"
