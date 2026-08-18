@@ -1,5 +1,5 @@
 [tools]
 buf = "1.72.0"
-node = "24.19.0"
+node = "26.7.0"
 # Pinned so the Rust generator's fixtures build against a known toolchain.
 rust = { version = "1.97.1", profile = "minimal", components = ["clippy", "rustfmt"] }
