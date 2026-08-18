@@ -11,7 +11,7 @@
   ],
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/mathematic-inc/connect-sdk.git",
+    "url": "git+https://github.com/mathematic-inc/connectrpc-sdk.git",
     "directory": "packages/protoc-gen-connect-sdk"
   },
   "license": "MIT OR Apache-2.0",
