@@ -19,11 +19,12 @@ export const file_connectsdk_v1_annotations: GenFile = /*@__PURE__*/
  * Defaults to the lower-camel plural of the service name with its `Service`
  * suffix removed, so `WorkspaceService` becomes `workspaces`.
  *
- * Set it where that plural is wrong, since the default pluralizes by rule
- * and English does not:
+ * Irregular plurals are handled, so `PersonService` gives `people` without
+ * an override. Set this where the resource a schema names is not the one
+ * its callers know:
  *
- *     service PersonService {
- *       option (connectsdk.v1.namespace) = "people";
+ *     service WorkspaceService {
+ *       option (connectsdk.v1.namespace) = "projects";
  *     }
  *
  * Two services may share a namespace, which is how a schema splits one

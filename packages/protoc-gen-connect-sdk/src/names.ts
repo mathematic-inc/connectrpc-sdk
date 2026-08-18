@@ -12,6 +12,8 @@
  * deriving `listAccountingPeriods` and deriving `listingPeriods`.
  */
 
+import pluralize from "pluralize";
+
 /** Splits an identifier into its words, lower-cased. */
 export function words(name: string): string[] {
   return (
@@ -33,33 +35,15 @@ export function lowerCamel(parts: readonly string[]): string {
 }
 
 /**
- * The plural of one lower-case word.
- *
- * Covers the regular English endings and nothing else. A schema whose
- * resource pluralizes irregularly sets `connectsdk.v1.namespace`, which is
- * cheaper and more honest than carrying a dictionary that is also incomplete.
- *
- * A word already ending in `s` is taken to be plural and left alone, except
- * for the `ss` ending, which is not: `address` becomes `addresses` while
- * `analytics` stays as it is. The two are indistinguishable by any rule that
- * does not look at the doubled `s`.
- */
-export function plural(word: string): string {
-  if (/(?:[^aeiou]y)$/v.test(word)) {
-    return `${word.slice(0, -1)}ies`;
-  }
-  if (/(?:ss|x|z|ch|sh)$/v.test(word)) {
-    return `${word}es`;
-  }
-  return word.endsWith("s") ? word : `${word}s`;
-}
-
-/**
  * The namespace a service's methods group under.
  *
  * `WorkspaceService` gives `workspaces`, and `AgentSetupService` gives
  * `agentSetups` — plural because a namespace holds a collection, and the
  * pluralized last word because that is the resource the service is named for.
+ *
+ * Pluralization comes from `pluralize`, so the irregular resources English
+ * actually has — `person`, `child`, `status` — come out right rather than
+ * needing an override each.
  */
 export function namespaceFor(serviceName: string, override?: string): string {
   if (override !== undefined && override !== "") {
@@ -70,7 +54,7 @@ export function namespaceFor(serviceName: string, override?: string): string {
     parts.pop();
   }
   const last = parts.pop();
-  return last === undefined ? "service" : lowerCamel([...parts, plural(last)]);
+  return last === undefined ? "service" : lowerCamel([...parts, pluralize.plural(last)]);
 }
 
 /**
@@ -105,7 +89,7 @@ export function methodFor(methodName: string, namespace: string, override?: stri
   const forms =
     last === undefined
       ? []
-      : [...new Set([last, singular(last)])].map((form) => [...resource, form]);
+      : [...new Set([last, pluralize.singular(last)])].map((form) => [...resource, form]);
 
   for (const form of forms) {
     if (startsWithWords(parts, form)) {
@@ -115,17 +99,6 @@ export function methodFor(methodName: string, namespace: string, override?: stri
     }
   }
   return lowerCamel([verb, ...parts]);
-}
-
-/** The singular of a regularly pluralized word, for matching one member of a namespace. */
-function singular(word: string): string {
-  if (word.endsWith("ies")) {
-    return `${word.slice(0, -3)}y`;
-  }
-  if (/(?:ss|x|z|ch|sh)es$/v.test(word)) {
-    return word.slice(0, -2);
-  }
-  return word.endsWith("s") ? word.slice(0, -1) : word;
 }
 
 /** Whether `parts` begins with every word of `prefix`, compared word by word. */
