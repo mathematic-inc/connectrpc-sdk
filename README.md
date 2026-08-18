@@ -50,17 +50,22 @@ Matching is on whole words, not substrings, so
 `AccountService.ListAccountingPeriods` derives `listAccountingPeriods` rather
 than `listingPeriods`.
 
+Pluralization comes from [`pluralize`](https://www.npmjs.com/package/pluralize),
+so the irregular resources English actually has come out right on their own:
+`PersonService` gives `people`, `ChildService` gives `children`, and
+`AnalyticsService` stays `analytics`.
+
 ## Overriding a derived name
 
-The derivation is a guess about English, so it is occasionally wrong. Two
-annotations correct it:
+The derivation follows a schema's naming, which is occasionally not the
+naming its callers want. Two annotations correct it:
 
 ```proto
 import "connectsdk/v1/annotations.proto";
 
-service PersonService {
-  // `people`, since the rule would pluralize to `persons`.
-  option (connectsdk.v1.namespace) = "people";
+service WorkspaceService {
+  // `projects`, because that is what the product calls them.
+  option (connectsdk.v1.namespace) = "projects";
 
   rpc ListEntityExports(ListEntityExportsRequest) returns (ListEntityExportsResponse) {
     option (connectsdk.v1.method) = "listForEntity";
