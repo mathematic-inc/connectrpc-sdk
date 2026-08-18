@@ -27,7 +27,7 @@
     "LICENSE-APACHE"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json",
+    "build": "tsc -p tsconfig.build.json && chmod +x dist/protoc-gen-connect-sdk.js",
     "prepack": "cp ../../README.md ../../LICENSE-MIT ../../LICENSE-APACHE . && mkdir -p proto && cp -R ../../proto/connectsdk proto/",
     "test": "vitest run"
   },
