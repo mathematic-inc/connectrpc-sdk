@@ -10,3 +10,10 @@ target/
 
 # macOS.
 .DS_Store
+
+# Copied in by the plugin package's `prepack` so npm ships them; npm does not
+# follow symlinks the way cargo does.
+packages/protoc-gen-connect-sdk/README.md
+packages/protoc-gen-connect-sdk/LICENSE-MIT
+packages/protoc-gen-connect-sdk/LICENSE-APACHE
+packages/protoc-gen-connect-sdk/proto/
