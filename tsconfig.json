@@ -1,0 +1,4 @@
+{
+  "files": [],
+  "references": [{ "path": "packages/protoc-gen-connect-sdk/tsconfig.build.json" }]
+}
