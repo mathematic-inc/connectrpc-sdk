@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.2](https://github.com/mathematic-inc/connectrpc-sdk/compare/v0.1.1...v0.1.2) (2026-08-18)
+
+
+### Bug Fixes
+
+* **rust:** Generate includable headers and client-streaming methods ([240e6e9](https://github.com/mathematic-inc/connectrpc-sdk/commit/240e6e91b3345cd094b770b3d562755e9115e08b))
+
 ## [0.1.1](https://github.com/mathematic-inc/connectrpc-sdk/compare/v0.1.0...v0.1.1) (2026-08-18)
 
 
