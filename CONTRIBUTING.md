@@ -13,6 +13,9 @@ problem you want to solve, and wait for a maintainer to respond.
 If Mathematic decides to make the change, a maintainer will have an agent open
 the pull request. Please do not open one yourself.
 
+When Mathematic implements a proposal, we will link the implementation pull
+request to the Discussion and credit the Discussion's original author.
+
 ## Pull requests
 
 GitHub restricts pull request creation to Mathematic maintainers and repository
