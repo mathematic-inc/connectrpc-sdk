@@ -37,11 +37,11 @@
     "@connectrpc/connect": "^2.1.2",
     "pluralize": "^8.0.0"
   },
-  "publishConfig": {
-    "access": "public"
-  },
   "devDependencies": {
     "@bufbuild/protocompile": "^0.0.1",
     "@types/pluralize": "^0.0.33"
+  },
+  "publishConfig": {
+    "access": "public"
   }
 }

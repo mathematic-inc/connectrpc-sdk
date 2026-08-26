@@ -6,7 +6,7 @@
  * and this decides only what the methods are named and how they are grouped.
  */
 
-import type { DescFile, DescMethod, DescService } from "@bufbuild/protobuf";
+import type { DescFile, DescMethod } from "@bufbuild/protobuf";
 import type { GeneratedFile, Schema } from "@bufbuild/protoplugin";
 
 import { findCollision, planNamespaces, type PlannedNamespace } from "./plan.js";
@@ -96,8 +96,7 @@ function generateFile(f: GeneratedFile, file: DescFile, namespaces: PlannedNames
   f.print();
   f.print(
     f.jsDoc(
-      `Binds the ${describe(file)} to one transport.\n\n` +
-        `Reads as \`${example(namespaces)}\`.`,
+      `Binds the ${describe(file)} to one transport.\n\nReads as \`${example(namespaces)}\`.`,
     ),
   );
   f.print(f.export("function", `create${name}`), "(transport: ", transport, "): ", name, " {");
@@ -156,9 +155,7 @@ function clientVar(serviceName: string): string {
  */
 function sdkName(file: DescFile): string {
   const parts = file.proto.package.split(".").filter((part) => !/^v\d+(?:[a-z]\w*)?$/v.test(part));
-  return `${parts
-    .map((part) => part.charAt(0).toUpperCase() + part.slice(1))
-    .join("")}Client`;
+  return `${parts.map((part) => part.charAt(0).toUpperCase() + part.slice(1)).join("")}Client`;
 }
 
 function describe(file: DescFile): string {

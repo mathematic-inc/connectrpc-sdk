@@ -28,20 +28,20 @@ where they were.
 For a service `[Resource]Service`, the namespace is the pluralized resource,
 and each method drops the resource its namespace already names:
 
-| RPC | Reads as |
-| --- | --- |
-| `WorkspaceService.ListWorkspaces` | `workspaces.list` |
-| `WorkspaceService.CreateWorkspace` | `workspaces.create` |
+| RPC                                     | Reads as                 |
+| --------------------------------------- | ------------------------ |
+| `WorkspaceService.ListWorkspaces`       | `workspaces.list`        |
+| `WorkspaceService.CreateWorkspace`      | `workspaces.create`      |
 | `WorkspaceService.GetWorkspaceOverview` | `workspaces.getOverview` |
-| `ExportService.ListExportRuns` | `exports.listRuns` |
-| `AccountService.GetAccountStatus` | `accounts.getStatus` |
+| `ExportService.ListExportRuns`          | `exports.listRuns`       |
+| `AccountService.GetAccountStatus`       | `accounts.getStatus`     |
 
 Two rules keep it from over-reaching.
 
 A method naming no resource keeps every word, because there is nothing to
 remove: `WorkspaceService.SetDraftMode` stays `workspaces.setDraftMode`.
 
-Only a *leading* occurrence is removed. `ExportService.ListEntityExports`
+Only a _leading_ occurrence is removed. `ExportService.ListEntityExports`
 lists the exports of an entity rather than a collection of entities, so it
 stays `exports.listEntityExports`. Removing the resource wherever it appeared
 would name it `exports.listEntity`, which reads as listing entities.
@@ -67,7 +67,9 @@ service WorkspaceService {
   // `projects`, because that is what the product calls them.
   option (connectsdk.v1.namespace) = "projects";
 
-  rpc ListEntityExports(ListEntityExportsRequest) returns (ListEntityExportsResponse) {
+  rpc ListEntityExports(
+    ListEntityExportsRequest
+  ) returns (ListEntityExportsResponse) {
     option (connectsdk.v1.method) = "listForEntity";
   }
 }
@@ -165,7 +167,7 @@ The wire call is identical; only the types at the edges change.
 
 ## Contributing
 
-Start with a [GitHub Discussion](../../discussions/new) and wait for a
+Start with a [GitHub Discussion](https://github.com/mathematic-inc/connectrpc-sdk/discussions/new) and wait for a
 maintainer to review the proposal. We use AI agents to implement approved
 changes, so we do not review unsolicited pull requests. When Mathematic
 implements a proposal, we will link the implementation pull request to the
