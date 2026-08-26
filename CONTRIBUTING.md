@@ -5,8 +5,8 @@ maintainers.
 
 ## Propose a change
 
-Reviewing an unsolicited pull request usually takes longer than implementing
-the same change after agreeing on the approach. Start a
+Reviewing an unsolicited pull request takes longer than implementing the same
+change once we agree on the approach. Start a
 [GitHub Discussion](../../discussions/new) before writing code, explain the
 problem you want to solve, and wait for a maintainer to respond.
 
@@ -15,6 +15,6 @@ the pull request. Please do not open one yourself.
 
 ## Pull requests
 
-Only organization members, repository collaborators, and approved maintenance
-bots (Dependabot and Renovate) may open pull requests. The workflow closes all
-other pull requests automatically.
+GitHub restricts pull request creation to Mathematic maintainers and repository
+collaborators with write, maintain, or admin access, plus authorized
+maintenance agents.

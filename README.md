@@ -167,11 +167,10 @@ The wire call is identical; only the types at the edges change.
 
 Start with a [GitHub Discussion](../../discussions/new) and wait for a
 maintainer to review the proposal. We use AI agents to implement approved
-changes, so we do not review unsolicited pull requests. Only organization
-members, repository collaborators, and approved maintenance bots (Dependabot
-and Renovate) may open pull requests. The workflow closes all other pull
-requests automatically. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full
-process.
+changes, so we do not review unsolicited pull requests. GitHub restricts pull
+request creation to Mathematic maintainers and repository collaborators with
+write, maintain, or admin access, plus authorized maintenance agents. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for the full process.
 
 ## License
 
