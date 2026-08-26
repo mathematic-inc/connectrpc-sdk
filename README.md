@@ -163,6 +163,15 @@ let response = client
 
 The wire call is identical; only the types at the edges change.
 
+## Contributing
+
+Start with a [GitHub Discussion](../../discussions/new) and wait for a
+maintainer to review the proposal. We use AI agents to implement approved
+changes, so we do not review unsolicited pull requests. GitHub restricts pull
+request creation to Mathematic maintainers and repository collaborators with
+write, maintain, or admin access, plus authorized maintenance agents. See
+[CONTRIBUTING.md](CONTRIBUTING.md) for the full process.
+
 ## License
 
 MIT or Apache-2.0, at your option.
