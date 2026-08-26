@@ -163,6 +163,16 @@ let response = client
 
 The wire call is identical; only the types at the edges change.
 
+## Contributing
+
+Start with a [GitHub Discussion](../../discussions/new) and wait for a
+maintainer to review the proposal. We use AI agents to implement approved
+changes, so we do not review unsolicited pull requests. Only organization
+members, repository collaborators, and approved maintenance bots (Dependabot
+and Renovate) may open pull requests. The workflow closes all other pull
+requests automatically. See [CONTRIBUTING.md](CONTRIBUTING.md) for the full
+process.
+
 ## License
 
 MIT or Apache-2.0, at your option.
