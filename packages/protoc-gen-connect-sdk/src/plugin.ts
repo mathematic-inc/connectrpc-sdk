@@ -13,64 +13,59 @@ import type { Plugin } from "@bufbuild/protoplugin";
 import { generateRust, type RustOptions } from "./rust.js";
 import { generateTypeScript } from "./typescript.js";
 
-const ecmaScriptPlugin = createEcmaScriptPlugin<
-  RustOptions & { language: "typescript" | "rust" }
->({
-    name: "protoc-gen-connect-sdk",
-    version: "v0.1.0",
-    parseOptions(raw) {
-      let language: "typescript" | "rust" = "typescript";
-      let servicePath = "";
-      let messagePath = "";
-      const externPaths = new Map<string, string>();
-      for (const { key, value } of raw) {
-        switch (key) {
-          case "language":
-            if (value !== "typescript" && value !== "rust") {
-              throw new Error(`Unknown language "${value}". Use "typescript" or "rust".`);
-            }
-            language = value;
-            break;
-          case "service_path":
-            servicePath = value;
-            break;
-          case "message_path":
-            messagePath = value;
-            break;
-          case "extern_path": {
-            // `.google.protobuf=::buffa_types::google::protobuf`, matching the
-            // spelling the message and service generators already take.
-            const split = value.indexOf("=");
-            if (split === -1) {
-              throw new Error(
-                `extern_path expects "<proto package>=<rust path>", but got "${value}".`,
-              );
-            }
-            externPaths.set(
-              value.slice(0, split).replace(/^\./v, ""),
-              value.slice(split + 1),
-            );
-            break;
+const ecmaScriptPlugin = createEcmaScriptPlugin<RustOptions & { language: "typescript" | "rust" }>({
+  name: "protoc-gen-connect-sdk",
+  version: "v0.1.0",
+  parseOptions(raw) {
+    let language: "typescript" | "rust" = "typescript";
+    let servicePath = "";
+    let messagePath = "";
+    const externPaths = new Map<string, string>();
+    for (const { key, value } of raw) {
+      switch (key) {
+        case "language":
+          if (value !== "typescript" && value !== "rust") {
+            throw new Error(`Unknown language "${value}". Use "typescript" or "rust".`);
           }
-          default:
-            throw new Error(`Unknown option "${key}".`);
+          language = value;
+          break;
+        case "service_path":
+          servicePath = value;
+          break;
+        case "message_path":
+          messagePath = value;
+          break;
+        case "extern_path": {
+          // `.google.protobuf=::buffa_types::google::protobuf`, matching the
+          // spelling the message and service generators already take.
+          const split = value.indexOf("=");
+          if (split === -1) {
+            throw new Error(
+              `extern_path expects "<proto package>=<rust path>", but got "${value}".`,
+            );
+          }
+          externPaths.set(value.slice(0, split).replace(/^\./v, ""), value.slice(split + 1));
+          break;
         }
+        default:
+          throw new Error(`Unknown option "${key}".`);
       }
-      if (language === "rust" && (servicePath === "" || messagePath === "")) {
-        throw new Error(
-          'The Rust SDK delegates to generated clients, so it needs "service_path" and ' +
-            '"message_path" naming where those were generated.',
-        );
-      }
-      return { language, servicePath, messagePath, externPaths };
-    },
-    generateTs(schema) {
-      if (schema.options.language === "rust") {
-        generateRust(schema);
-        return;
-      }
-      generateTypeScript(schema);
-    },
+    }
+    if (language === "rust" && (servicePath === "" || messagePath === "")) {
+      throw new Error(
+        'The Rust SDK delegates to generated clients, so it needs "service_path" and ' +
+          '"message_path" naming where those were generated.',
+      );
+    }
+    return { language, servicePath, messagePath, externPaths };
+  },
+  generateTs(schema) {
+    if (schema.options.language === "rust") {
+      generateRust(schema);
+      return;
+    }
+    generateTypeScript(schema);
+  },
 });
 
 /**

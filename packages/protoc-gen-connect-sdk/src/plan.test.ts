@@ -1,7 +1,7 @@
 import { readFileSync } from "node:fs";
 
-import { compileFile } from "@bufbuild/protocompile";
 import type { DescService } from "@bufbuild/protobuf";
+import { compileFile } from "@bufbuild/protocompile";
 import { describe, expect, test } from "vitest";
 
 import { findCollision, planNamespaces } from "./plan.js";

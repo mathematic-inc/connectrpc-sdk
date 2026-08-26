@@ -11,12 +11,12 @@
  * costs nothing and borrows rather than clones.
  */
 
-import type { DescFile, DescMethod, DescService } from "@bufbuild/protobuf";
+import type { DescFile, DescMethod } from "@bufbuild/protobuf";
 import type { GeneratedFile, Schema } from "@bufbuild/protoplugin";
 import { getComments } from "@bufbuild/protoplugin";
 
-import { findCollision, planNamespaces, type PlannedNamespace } from "./plan.js";
 import { words } from "./names.js";
+import { findCollision, planNamespaces, type PlannedNamespace } from "./plan.js";
 
 /** Where the messages and clients this SDK delegates to were generated. */
 export interface RustOptions {
@@ -81,7 +81,13 @@ function generateFile(
   f.print("// An idiomatic client for the `", pkg, "` API.");
   f.print("//");
   f.print("// Methods are grouped by the resource they act on, so a call reads as");
-  f.print("// `client.", namespaces[0]?.name ?? "resources", "().", firstMethod(namespaces), "(request)`.");
+  f.print(
+    "// `client.",
+    namespaces[0]?.name ?? "resources",
+    "().",
+    firstMethod(namespaces),
+    "(request)`.",
+  );
   f.print();
 
   const services = [...new Set(namespaces.flatMap((namespace) => [...namespace.services]))];
@@ -93,7 +99,15 @@ function generateFile(
   f.print("#[derive(Clone)]");
   f.print("pub struct ", clientName(pkg), "<T> {");
   for (const service of services) {
-    f.print("    ", fieldName(service.name), ": ", options.servicePath, "::", service.name, "Client<T>,");
+    f.print(
+      "    ",
+      fieldName(service.name),
+      ": ",
+      options.servicePath,
+      "::",
+      service.name,
+      "Client<T>,",
+    );
   }
   // The generated clients keep their transport and configuration private, so
   // the byot methods — which call the transport directly with types the
@@ -108,9 +122,7 @@ function generateFile(
   f.print("impl<T> ", clientName(pkg), "<T>");
   f.print("where");
   f.print("    T: ::connectrpc::client::ClientTransport,");
-  f.print(
-    "    <T::ResponseBody as ::connectrpc::http_body::Body>::Error: ::std::fmt::Display,",
-  );
+  f.print("    <T::ResponseBody as ::connectrpc::http_body::Body>::Error: ::std::fmt::Display,");
   f.print("{");
   f.print("    /// Creates a client over one transport and configuration.");
   f.print("    pub fn new(transport: T, config: ::connectrpc::client::ClientConfig) -> Self");
@@ -160,9 +172,7 @@ function generateFile(
     f.print("impl<T> ", groupName(namespace.name), "<'_, T>");
     f.print("where");
     f.print("    T: ::connectrpc::client::ClientTransport,");
-    f.print(
-      "    <T::ResponseBody as ::connectrpc::http_body::Body>::Error: ::std::fmt::Display,",
-    );
+    f.print("    <T::ResponseBody as ::connectrpc::http_body::Body>::Error: ::std::fmt::Display,");
     f.print("{");
     for (const [index, method] of namespace.methods.entries()) {
       if (index > 0) {
@@ -182,12 +192,7 @@ function generateFile(
  * caller wanting them can reach the generated client directly. Streaming
  * calls return the stream itself, which is already the useful shape.
  */
-function printMethod(
-  f: GeneratedFile,
-  name: string,
-  desc: DescMethod,
-  options: RustOptions,
-): void {
+function printMethod(f: GeneratedFile, name: string, desc: DescMethod, options: RustOptions): void {
   const rustName = snake(name);
   const delegate = snake(desc.name);
   const request = messagePath(desc.input, options);
@@ -206,13 +211,7 @@ function printMethod(
     );
     f.print("        ::connectrpc::ConnectError,");
     f.print("    > {");
-    f.print(
-      "        self.client.",
-      fieldName(desc.parent.name),
-      ".",
-      delegate,
-      "(request).await",
-    );
+    f.print("        self.client.", fieldName(desc.parent.name), ".", delegate, "(request).await");
     f.print("    }");
     printByot(f, rustName, desc, options, "server_streaming");
     return;
@@ -289,9 +288,7 @@ function printByot(
     f.print("    where");
     f.print("        Req: ::buffa::Message + ::connectrpc::JsonSerialize,");
     f.print("        RespView: ::buffa::view::MessageView<'static> + Send,");
-    f.print(
-      "        RespView::Owned: ::buffa::Message + ::connectrpc::JsonDeserialize,",
-    );
+    f.print("        RespView::Owned: ::buffa::Message + ::connectrpc::JsonDeserialize,");
     f.print("    {");
     f.print("        ::connectrpc::client::call_server_stream(");
   } else if (kind === "client_streaming") {
@@ -302,9 +299,7 @@ function printByot(
     f.print("    where");
     f.print("        Req: ::buffa::Message + ::connectrpc::JsonSerialize,");
     f.print("        RespView: ::buffa::view::MessageView<'static> + Send,");
-    f.print(
-      "        RespView::Owned: ::buffa::Message + ::connectrpc::JsonDeserialize,",
-    );
+    f.print("        RespView::Owned: ::buffa::Message + ::connectrpc::JsonDeserialize,");
     f.print("    {");
     f.print("        ::connectrpc::client::call_client_stream::<_, _, RespView>(");
   } else {
@@ -315,9 +310,7 @@ function printByot(
     f.print("    where");
     f.print("        Req: ::buffa::Message + ::connectrpc::JsonSerialize,");
     f.print("        RespView: ::buffa::view::MessageView<'static> + Send,");
-    f.print(
-      "        RespView::Owned: ::buffa::Message + ::connectrpc::JsonDeserialize,",
-    );
+    f.print("        RespView::Owned: ::buffa::Message + ::connectrpc::JsonDeserialize,");
     f.print("    {");
     f.print("        ::connectrpc::client::call_unary::<_, _, RespView>(");
   }

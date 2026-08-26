@@ -8,7 +8,10 @@
 
 import { getExtension, hasExtension, type DescMethod, type DescService } from "@bufbuild/protobuf";
 
-import { method as methodOption, namespace as namespaceOption } from "./gen/connectsdk/v1/annotations_pb.js";
+import {
+  method as methodOption,
+  namespace as namespaceOption,
+} from "./gen/connectsdk/v1/annotations_pb.js";
 import { methodFor, namespaceFor } from "./names.js";
 
 /** One RPC, under the name it takes in the SDK. */

@@ -19,8 +19,8 @@ export function words(name: string): string[] {
   return (
     name
       // `ExportRunID` splits after `Run` and keeps `ID` whole.
-      .replace(/([a-z0-9])([A-Z])/gv, "$1 $2")
-      .replace(/([A-Z]+)([A-Z][a-z])/gv, "$1 $2")
+      .replaceAll(/([a-z0-9])([A-Z])/gv, "$1 $2")
+      .replaceAll(/([A-Z]+)([A-Z][a-z])/gv, "$1 $2")
       .split(/[\s_]+/v)
       .filter((word) => word !== "")
       .map((word) => word.toLowerCase())

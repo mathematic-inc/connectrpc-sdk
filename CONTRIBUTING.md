@@ -7,7 +7,7 @@ maintainers.
 
 Reviewing an unsolicited pull request takes longer than implementing the same
 change once we agree on the approach. Start a
-[GitHub Discussion](../../discussions/new) before writing code, explain the
+[GitHub Discussion](https://github.com/mathematic-inc/connectrpc-sdk/discussions/new) before writing code, explain the
 problem you want to solve, and wait for a maintainer to respond.
 
 If Mathematic decides to make the change, a maintainer will have an agent open
@@ -21,3 +21,12 @@ request to the Discussion and credit the Discussion's original author.
 GitHub restricts pull request creation to Mathematic maintainers and repository
 collaborators with write, maintain, or admin access, plus authorized
 maintenance agents.
+
+## Local setup
+
+Install the pinned tools and Git hooks before working in the repository:
+
+```sh
+mise install
+hk install
+```
