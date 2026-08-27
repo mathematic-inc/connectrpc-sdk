@@ -100,9 +100,9 @@ plugins:
 One client per proto package, beside the messages it is built from:
 
 ```ts
-import { createSloperDesktopClient } from "./gen/sloper/desktop/v1/client.js";
+import { createDesktopClient } from "./gen/desktop/v1/client.js";
 
-const client = createSloperDesktopClient(transport);
+const client = createDesktopClient(transport);
 
 const overview = await client.workspaces.getOverview({ workspaceId });
 for await (const batch of client.events.subscribe({})) {
@@ -134,7 +134,7 @@ The shape follows `async-openai`: one client owning the transport, with
 borrowed group structs reached through accessors.
 
 ```rust
-let client = SloperDesktopClient::new(transport, config);
+let client = DesktopClient::new(transport, config);
 
 let overview = client.workspaces().get_overview(request).await?;
 let mut events = client.events().subscribe(request).await?;

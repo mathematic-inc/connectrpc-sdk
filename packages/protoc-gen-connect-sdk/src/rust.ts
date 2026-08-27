@@ -386,7 +386,7 @@ function firstMethod(namespaces: readonly PlannedNamespace[]): string {
   return snake(namespaces[0]?.methods[0]?.name ?? "get");
 }
 
-/** `sloper.desktop.v1` gives `SloperDesktopClient`, dropping the version. */
+/** Drops version segments because the versioned import path already carries them. */
 function clientName(pkg: string): string {
   const parts = pkg.split(".").filter((part) => !/^v\d+(?:[a-z]\w*)?$/v.test(part));
   return `${parts.map(pascalWord).join("")}Client`;

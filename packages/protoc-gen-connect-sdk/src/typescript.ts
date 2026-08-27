@@ -15,9 +15,7 @@ import { findCollision, planNamespaces, type PlannedNamespace } from "./plan.js"
  * Generates one client per proto package.
  *
  * A package is the unit a person installs and imports, so its services belong
- * on one client even when the schema spreads them over several files. Sloper
- * declares one service per file and still wants a single `client.workspaces`
- * beside `client.entities`.
+ * on one client even when the schema spreads them over several files.
  */
 export function generateTypeScript(schema: Schema): void {
   for (const [, files] of groupByPackage(schema.files)) {
@@ -149,9 +147,8 @@ function clientVar(serviceName: string): string {
 /**
  * The exported interface name, from the proto package.
  *
- * `sloper.desktop.v1` gives `SloperDesktopClient`. The version is dropped
- * because a client is imported from a versioned path already, and
- * `SloperDesktopV1Client` only repeats it.
+ * Version segments are dropped because a client is imported from a versioned
+ * path already, so including the version in its name would repeat it.
  */
 function sdkName(file: DescFile): string {
   const parts = file.proto.package.split(".").filter((part) => !/^v\d+(?:[a-z]\w*)?$/v.test(part));
