@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.4](https://github.com/mathematic-inc/connectrpc-sdk/compare/v0.1.3...v0.1.4) (2026-08-27)
+
+
+### Bug Fixes
+
+* **generator:** Remove external project references ([2569ed2](https://github.com/mathematic-inc/connectrpc-sdk/commit/2569ed248e4b44507319d9e065f031bf1bd87c9f))
+
 ## [0.1.3](https://github.com/mathematic-inc/connectrpc-sdk/compare/v0.1.2...v0.1.3) (2026-08-27)
 
 
