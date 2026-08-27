@@ -28,6 +28,8 @@ jobs:
       - uses: jdx/mise-action@c2a87611a18de5b3828c5652fe268e992400cb5c # v4.3.0
         with:
           install_args: node npm
+      - name: Verify lockfile is current
+        run: npm install --package-lock-only --ignore-scripts && git diff --exit-code -- package-lock.json
       - run: npm ci
       - run: npm test
       - run: npm run typecheck
