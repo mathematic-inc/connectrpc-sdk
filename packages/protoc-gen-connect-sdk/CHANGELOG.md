@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.3](https://github.com/mathematic-inc/connectrpc-sdk/compare/v0.1.2...v0.1.3) (2026-08-27)
+
+
+### Bug Fixes
+
+* **codegen:** Declare Node engine floor ([#12](https://github.com/mathematic-inc/connectrpc-sdk/issues/12)) ([21054a5](https://github.com/mathematic-inc/connectrpc-sdk/commit/21054a50a22d8d1a10744f058c3cdc62b546f402))
+
 ## [0.1.2](https://github.com/mathematic-inc/connectrpc-sdk/compare/v0.1.1...v0.1.2) (2026-08-18)
 
 ### Bug Fixes
