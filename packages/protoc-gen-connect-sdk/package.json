@@ -41,6 +41,9 @@
     "@bufbuild/protocompile": "^0.0.1",
     "@types/pluralize": "^0.0.33"
   },
+  "engines": {
+    "node": ">=20"
+  },
   "publishConfig": {
     "access": "public"
   }
