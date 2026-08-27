@@ -127,4 +127,12 @@ jobs:
       - name: Publish package
         env:
           NPM_CONFIG_REGISTRY: https://registry.npmjs.org
-        run: npm publish --workspace protoc-gen-connect-sdk
+          VERSION: ${{ needs.meta.outputs.version }}
+        run: |
+          set -euo pipefail
+          # Re-running an immutable release must not republish its version.
+          if npm view "protoc-gen-connect-sdk@${VERSION}" version >/dev/null 2>&1; then
+            echo "protoc-gen-connect-sdk@${VERSION} is already published, skipping."
+          else
+            npm publish --workspace protoc-gen-connect-sdk
+          fi
