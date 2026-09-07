@@ -217,12 +217,12 @@ function printMethod(f: GeneratedFile, name: string, desc: DescMethod, options: 
     return;
   }
   // A client-streaming call sends many requests and receives one response,
-  // so it takes an iterator. The generated client already has this shape;
+  // so it takes an async request stream. The generated client has this shape;
   // matching it is what keeps the delegation a single call.
   if (desc.methodKind === "client_streaming") {
     f.print("    pub async fn ", rustName, "(");
     f.print("        &self,");
-    f.print("        requests: impl IntoIterator<Item = ", request, ">,");
+    f.print("        requests: impl ::connectrpc::client::ClientRequestStream<", request, ">,");
     f.print(
       "    ) -> ::std::result::Result<",
       messagePath(desc.output, options),
@@ -294,7 +294,7 @@ function printByot(
   } else if (kind === "client_streaming") {
     f.print("    pub async fn ", rustName, "_byot<Req, RespView>(");
     f.print("        &self,");
-    f.print("        requests: impl IntoIterator<Item = Req>,");
+    f.print("        requests: impl ::connectrpc::client::ClientRequestStream<Req>,");
     f.print("    ) -> ::std::result::Result<RespView::Owned, ::connectrpc::ConnectError>");
     f.print("    where");
     f.print("        Req: ::buffa::Message + ::connectrpc::JsonSerialize,");

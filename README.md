@@ -117,6 +117,8 @@ what changed.
 
 ## Rust
 
+Generated Rust targets `connectrpc` 0.9 and `protoc-gen-connect-rust` 0.9.
+
 ```yaml
 version: v2
 plugins:
@@ -142,8 +144,10 @@ let mut events = client.events().subscribe(request).await?;
 
 Unary methods return the response message rather than the transport's
 `UnaryResponse`, since headers and trailers are a detail of the hop; a caller
-who wants them can reach the generated client directly. Streaming methods
-return the stream itself.
+who wants them can reach the generated client directly. Server-streaming methods
+return the stream itself. Client-streaming methods accept a
+`connectrpc::client::ClientRequestStream` and return one response message.
+Wrap an existing collection with `connectrpc::stream_iter(requests)` to send it.
 
 `service_path` and `message_path` name where the generated clients and
 messages live. `extern_path` follows the spelling the message and service

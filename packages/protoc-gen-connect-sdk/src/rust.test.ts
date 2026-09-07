@@ -99,7 +99,7 @@ describe("generateRust", () => {
     expect(source).not.toMatch(/^\/\/!/mv);
   });
 
-  test("a client-streaming method takes an iterator of requests", () => {
+  test("client-streaming methods accept the transport's async request stream", () => {
     const source = generate(`
       service DeliveryService {
         rpc RecordReceipts(stream Request) returns (Response);
@@ -108,8 +108,9 @@ describe("generateRust", () => {
     // Many requests, one response: the signature must accept the stream, and
     // return the response message rather than a stream of them.
     expect(source).toContain(
-      "requests: impl IntoIterator<Item = crate::generated::messages::Request>,",
+      "requests: impl ::connectrpc::client::ClientRequestStream<crate::generated::messages::Request>,",
     );
+    expect(source).toContain("requests: impl ::connectrpc::client::ClientRequestStream<Req>,");
     expect(source).toContain(".record_receipts(requests)");
     expect(source).toContain("::connectrpc::client::call_client_stream::<_, _, RespView>(");
   });
