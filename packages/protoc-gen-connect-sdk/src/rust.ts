@@ -217,12 +217,12 @@ function printMethod(f: GeneratedFile, name: string, desc: DescMethod, options: 
     return;
   }
   // A client-streaming call sends many requests and receives one response,
-  // so it takes an iterator. The generated client already has this shape;
+  // so it takes an async request stream. The generated client has this shape;
   // matching it is what keeps the delegation a single call.
   if (desc.methodKind === "client_streaming") {
     f.print("    pub async fn ", rustName, "(");
     f.print("        &self,");
-    f.print("        requests: impl IntoIterator<Item = ", request, ">,");
+    f.print("        requests: impl ::connectrpc::client::ClientRequestStream<", request, ">,");
     f.print(
       "    ) -> ::std::result::Result<",
       messagePath(desc.output, options),
@@ -294,7 +294,7 @@ function printByot(
   } else if (kind === "client_streaming") {
     f.print("    pub async fn ", rustName, "_byot<Req, RespView>(");
     f.print("        &self,");
-    f.print("        requests: impl IntoIterator<Item = Req>,");
+    f.print("        requests: impl ::connectrpc::client::ClientRequestStream<Req>,");
     f.print("    ) -> ::std::result::Result<RespView::Owned, ::connectrpc::ConnectError>");
     f.print("    where");
     f.print("        Req: ::buffa::Message + ::connectrpc::JsonSerialize,");
@@ -316,8 +316,13 @@ function printByot(
   }
   f.print("            &self.client.transport,");
   f.print("            &self.client.config,");
-  f.print("            ", options.servicePath, "::", serviceNameConst(desc.parent.name), ",");
-  f.print("            ", quoted(desc.name), ",");
+  f.print(
+    "            ",
+    options.servicePath,
+    "::",
+    methodSpecConst(desc.parent.name, desc.name),
+    ".with_origin(::connectrpc::SpecOrigin::Client),",
+  );
   f.print("            ", kind === "client_streaming" ? "requests," : "request,");
   f.print("            ::connectrpc::client::CallOptions::default(),");
   f.print("        )");
@@ -330,13 +335,9 @@ function printByot(
   f.print("    }");
 }
 
-/** The generated constant holding one service's fully-qualified name. */
-function serviceNameConst(serviceName: string): string {
-  return `${snake(serviceName).toUpperCase()}_SERVICE_NAME`;
-}
-
-function quoted(value: string): string {
-  return JSON.stringify(value);
+/** The generated method spec preserves streaming and idempotency metadata. */
+function methodSpecConst(serviceName: string, methodName: string): string {
+  return `${snake(serviceName).toUpperCase()}_${snake(methodName).toUpperCase()}_SPEC`;
 }
 
 /**
