@@ -42,6 +42,52 @@ function generate(body: string): string {
 }
 
 describe("generateRust", () => {
+  test.each([
+    {
+      kind: "unary",
+      rpc: "GetWorkspace(Request) returns (Response)",
+      spec: "WORKSPACE_SERVICE_GET_WORKSPACE_SPEC",
+      call: "call_unary::<_, _, RespView>",
+      argument: "request",
+    },
+    {
+      kind: "server-streaming",
+      rpc: "WatchWorkspaces(Request) returns (stream Response)",
+      spec: "WORKSPACE_SERVICE_WATCH_WORKSPACES_SPEC",
+      call: "call_server_stream",
+      argument: "request",
+    },
+    {
+      kind: "client-streaming",
+      rpc: "RecordWorkspaces(stream Request) returns (Response)",
+      spec: "WORKSPACE_SERVICE_RECORD_WORKSPACES_SPEC",
+      call: "call_client_stream::<_, _, RespView>",
+      argument: "requests",
+    },
+  ])(
+    "$kind BYOT calls use the generated method spec with client origin",
+    ({ rpc, spec, call, argument }) => {
+      const source = generate(`
+      service WorkspaceService {
+        rpc ${rpc};
+      }
+    `);
+      // Reusing the service generator's spec keeps its streaming and
+      // idempotency metadata; only the origin changes for a client call.
+      expect(source).toContain(
+        [
+          `        ::connectrpc::client::${call}(`,
+          "            &self.client.transport,",
+          "            &self.client.config,",
+          `            crate::generated::service::${spec}.with_origin(::connectrpc::SpecOrigin::Client),`,
+          `            ${argument},`,
+          "            ::connectrpc::client::CallOptions::default(),",
+          "        )",
+        ].join("\n"),
+      );
+    },
+  );
+
   test("emits a file that can be pulled in with include!", () => {
     const source = generate(`
       service WorkspaceService {
