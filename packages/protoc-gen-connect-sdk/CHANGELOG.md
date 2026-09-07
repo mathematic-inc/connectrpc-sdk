@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.5](https://github.com/mathematic-inc/connectrpc-sdk/compare/v0.1.4...v0.1.5) (2026-09-07)
+
+
+### Bug Fixes
+
+* **rust:** Align generated SDK calls with ConnectRPC 0.9 ([#19](https://github.com/mathematic-inc/connectrpc-sdk/issues/19)) ([2f69a45](https://github.com/mathematic-inc/connectrpc-sdk/commit/2f69a4505885aa2dc0405cd5c14ec4227a1a6b72))
+
 ## [0.1.4](https://github.com/mathematic-inc/connectrpc-sdk/compare/v0.1.3...v0.1.4) (2026-08-27)
 
 
