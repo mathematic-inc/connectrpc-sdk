@@ -27,13 +27,13 @@
     "LICENSE-APACHE"
   ],
   "scripts": {
-    "build": "tsc -p tsconfig.build.json && chmod +x dist/protoc-gen-connect-sdk.js",
+    "build": "node ../../node_modules/typescript/bin/tsc -p tsconfig.build.json && chmod +x dist/protoc-gen-connect-sdk.js",
     "prepack": "cp ../../README.md ../../LICENSE-MIT ../../LICENSE-APACHE . && mkdir -p proto && cp -R ../../proto/connectsdk proto/",
     "test": "vitest run"
   },
   "dependencies": {
-    "@bufbuild/protobuf": "^2.14.0",
-    "@bufbuild/protoplugin": "^2.14.0",
+    "@bufbuild/protobuf": "^2.14.1",
+    "@bufbuild/protoplugin": "^2.14.1",
     "@connectrpc/connect": "^2.1.2",
     "pluralize": "^8.0.0"
   },
