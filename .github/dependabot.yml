@@ -11,6 +11,10 @@ updates:
 
   - package-ecosystem: npm
     directory: /
+    groups:
+      buf:
+        patterns:
+          - "@bufbuild/*"
     schedule:
       interval: weekly
     cooldown:
