@@ -6,8 +6,17 @@
   "packages": {
     "packages/protoc-gen-connect-sdk": {
       "release-type": "node",
-      "include-component-in-tag": false
+      "include-component-in-tag": false,
+      "extra-files": [
+        {
+          "type": "json",
+          "path": "/package-lock.json",
+          "jsonpath": "$.packages[\"packages/protoc-gen-connect-sdk\"].version"
+        }
+      ]
     }
   },
-  "plugins": ["sentence-case"]
+  "plugins": [
+    "sentence-case"
+  ]
 }
