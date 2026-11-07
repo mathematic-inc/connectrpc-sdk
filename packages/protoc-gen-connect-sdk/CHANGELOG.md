@@ -1,5 +1,12 @@
 # Changelog
 
+## [0.1.6](https://github.com/mathematic-inc/connectrpc-sdk/compare/v0.1.5...v0.1.6) (2026-11-07)
+
+
+### Bug Fixes
+
+* **deps:** Update dependencies across the stack ([#51](https://github.com/mathematic-inc/connectrpc-sdk/issues/51)) ([be5720b](https://github.com/mathematic-inc/connectrpc-sdk/commit/be5720bdc9bfa8442deec543ce67b07b09eb8d3c))
+
 ## [0.1.5](https://github.com/mathematic-inc/connectrpc-sdk/compare/v0.1.4...v0.1.5) (2026-09-07)
 
 ### Bug Fixes
