@@ -64,7 +64,7 @@ describe("generateRust", () => {
       call: "call_client_stream::<_, _, RespView>",
       argument: "requests",
     },
-  ])(
+  ] as const)(
     "$kind BYOT calls use the generated method spec with client origin",
     ({ rpc, spec, call, argument }) => {
       const source = generate(`

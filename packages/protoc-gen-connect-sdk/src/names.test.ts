@@ -3,7 +3,7 @@ import { describe, expect, test } from "vitest";
 import { methodFor, namespaceFor } from "./names.js";
 
 describe("namespaceFor", () => {
-  test.for([
+  test.for<readonly [string, string]>([
     ["WorkspaceService", "workspaces"],
     ["EntityService", "entities"],
     ["ExportService", "exports"],
@@ -25,7 +25,7 @@ describe("namespaceFor", () => {
     // A service named without the suffix still names its resource.
     ["Greeter", "greeters"],
   ])("%s -> %s", ([service, expected]) => {
-    expect(namespaceFor(service!)).toBe(expected);
+    expect(namespaceFor(service)).toBe(expected);
   });
 
   test("an override replaces the derived plural", () => {
@@ -34,7 +34,7 @@ describe("namespaceFor", () => {
 });
 
 describe("methodFor", () => {
-  test.for([
+  test.for<readonly [string, string, string]>([
     // The namespace names the resource, so the method drops it.
     ["ListWorkspaces", "workspaces", "list"],
     ["CreateWorkspace", "workspaces", "create"],
@@ -72,10 +72,10 @@ describe("methodFor", () => {
     ["ListEntityExports", "exports", "listEntityExports"],
     ["GetWorkspaceExport", "exports", "getWorkspaceExport"],
   ])("%s in %s -> %s", ([method, namespace, expected]) => {
-    expect(methodFor(method!, namespace!)).toBe(expected);
+    expect(methodFor(method, namespace)).toBe(expected);
   });
 
-  test.for([
+  test.for<readonly [string, string, string]>([
     // An irregular namespace still matches its own singular and plural.
     ["ListPeople", "people", "list"],
     ["GetPerson", "people", "get"],
@@ -84,7 +84,7 @@ describe("methodFor", () => {
     // The namespace names the resource, so what is left joins the verb.
     ["GetStatusHistory", "statuses", "getHistory"],
   ])("%s in %s -> %s", ([method, namespace, expected]) => {
-    expect(methodFor(method!, namespace!)).toBe(expected);
+    expect(methodFor(method, namespace)).toBe(expected);
   });
 
   test("matches whole words, not substrings", () => {

@@ -16,7 +16,7 @@ import { generateTypeScript } from "./typescript.js";
 const ecmaScriptPlugin = createEcmaScriptPlugin<RustOptions & { language: "typescript" | "rust" }>({
   name: "protoc-gen-connect-sdk",
   version: "v0.1.0",
-  parseOptions(raw) {
+  parseOptions(raw: readonly { readonly key: string; readonly value: string }[]) {
     let language: "typescript" | "rust" = "typescript";
     let servicePath = "";
     let messagePath = "";
