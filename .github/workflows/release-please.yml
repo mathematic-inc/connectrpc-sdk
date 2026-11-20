@@ -9,14 +9,14 @@ concurrency:
   group: release-pr-${{ github.workflow }}-${{ github.ref }}
   cancel-in-progress: false
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
   release-please:
-    environment: release
+    name: Release Please
     runs-on: ubuntu-latest
     timeout-minutes: 10
+    environment: release
     permissions:
       contents: write
       pull-requests: write
