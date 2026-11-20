@@ -9,11 +9,10 @@ concurrency:
   group: release-${{ github.ref }}
   cancel-in-progress: false
 
-permissions:
-  contents: read
+permissions: {}
 
 jobs:
-  meta:
+  validate-release:
     name: Validate release
     runs-on: ubuntu-latest
     timeout-minutes: 10
@@ -24,14 +23,17 @@ jobs:
       version: ${{ steps.parse.outputs.version }}
       is_prerelease: ${{ steps.parse.outputs.is_prerelease }}
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: jdx/mise-action@90f833d396d0cc3674b631d2d225e306476c303a # v5.2.10
+      - name: Install tools
+        uses: jdx/mise-action@90f833d396d0cc3674b631d2d225e306476c303a # v5.2.10
         with:
           install_args: node
           cache: false
-      - id: parse
+      - name: Validate tag and package version
+        id: parse
         shell: bash
         run: |
           set -euo pipefail
@@ -63,16 +65,19 @@ jobs:
 
   build-and-test:
     name: Build and test
-    needs: meta
+    needs:
+      - validate-release
     runs-on: ubuntu-latest
     timeout-minutes: 15
     permissions:
       contents: read
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: jdx/mise-action@90f833d396d0cc3674b631d2d225e306476c303a # v5.2.10
+      - name: Install tools
+        uses: jdx/mise-action@90f833d396d0cc3674b631d2d225e306476c303a # v5.2.10
         with:
           install_args: node npm
           cache: false
@@ -84,22 +89,25 @@ jobs:
 
   create-release:
     name: Create GitHub release
-    needs: [meta, build-and-test]
+    needs:
+      - validate-release
+      - build-and-test
     runs-on: ubuntu-latest
     timeout-minutes: 10
     environment: release
     permissions:
       contents: write
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           fetch-depth: 0
           persist-credentials: false
       - name: Create release
         env:
           GH_TOKEN: ${{ github.token }}
-          TAG: ${{ needs.meta.outputs.tag }}
-          IS_PRERELEASE: ${{ needs.meta.outputs.is_prerelease }}
+          TAG: ${{ needs.validate-release.outputs.tag }}
+          IS_PRERELEASE: ${{ needs.validate-release.outputs.is_prerelease }}
         run: |
           set -euo pipefail
           # Re-running an immutable release must not change it.
@@ -116,7 +124,9 @@ jobs:
 
   publish-npm:
     name: Publish to npm
-    needs: [meta, create-release]
+    needs:
+      - validate-release
+      - create-release
     runs-on: ubuntu-latest
     timeout-minutes: 15
     environment: release
@@ -126,19 +136,23 @@ jobs:
       # long-lived secret lives in this repo. Provenance comes with it.
       id-token: write
     steps:
-      - uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
+      - name: Check out repository
+        uses: actions/checkout@3d3c42e5aac5ba805825da76410c181273ba90b1 # v7.0.1
         with:
           persist-credentials: false
-      - uses: jdx/mise-action@90f833d396d0cc3674b631d2d225e306476c303a # v5.2.10
+      - name: Install tools
+        uses: jdx/mise-action@90f833d396d0cc3674b631d2d225e306476c303a # v5.2.10
         with:
           install_args: node npm
           cache: false
-      - run: npm ci
-      - run: npm run build
+      - name: Install dependencies
+        run: npm ci
+      - name: Build package
+        run: npm run build
       - name: Publish package
         env:
           NPM_CONFIG_REGISTRY: https://registry.npmjs.org
-          VERSION: ${{ needs.meta.outputs.version }}
+          VERSION: ${{ needs.validate-release.outputs.version }}
         run: |
           set -euo pipefail
           # Re-running an immutable release must not republish its version.
