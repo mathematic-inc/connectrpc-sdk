@@ -24,9 +24,11 @@ maintenance agents.
 
 ## Local setup
 
-Install the pinned tools and Git hooks before working in the repository:
+Before you work in the repository, install the pinned tools, write the tool
+settings and install the Git hooks:
 
 ```sh
 mise install
+mise run generate
 hk install
 ```
