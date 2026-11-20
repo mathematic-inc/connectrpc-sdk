@@ -347,13 +347,19 @@ function methodSpecConst(serviceName: string, methodName: string): string {
  * so its path comes from `extern_path` rather than from this package's own
  * output. `google.protobuf.Empty` is the common case.
  */
-function messagePath(desc: { typeName: string; name: string }, options: RustOptions): string {
+function messagePath(
+  desc: { readonly typeName: string; readonly name: string },
+  options: RustOptions,
+): string {
   const root = rootFor(desc.typeName, options);
   return `${root}::${desc.name}`;
 }
 
 /** The zero-copy view type of one message, which streams are generic over. */
-function viewPath(desc: { typeName: string; name: string }, options: RustOptions): string {
+function viewPath(
+  desc: { readonly typeName: string; readonly name: string },
+  options: RustOptions,
+): string {
   const root = rootFor(desc.typeName, options);
   return `${root}::__buffa::view::${desc.name}View<'static>`;
 }

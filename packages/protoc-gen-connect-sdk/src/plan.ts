@@ -69,7 +69,11 @@ export function planNamespaces(services: readonly DescService[]): PlannedNamespa
     }
     plan.set(name, entry);
   }
-  return [...plan].map(([name, entry]) => ({ name, ...entry }));
+  const namespaces: PlannedNamespace[] = [];
+  for (const [name, entry] of plan) {
+    namespaces.push({ name, ...entry });
+  }
+  return namespaces;
 }
 
 /**

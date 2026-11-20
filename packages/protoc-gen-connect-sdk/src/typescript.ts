@@ -55,7 +55,11 @@ function groupByPackage(files: readonly DescFile[]): Map<string, DescFile[]> {
   return packages;
 }
 
-function generateFile(f: GeneratedFile, file: DescFile, namespaces: PlannedNamespace[]): void {
+function generateFile(
+  f: GeneratedFile,
+  file: DescFile,
+  namespaces: readonly PlannedNamespace[],
+): void {
   f.preamble(file);
 
   const createClient = f.import("createClient", "@connectrpc/connect");
