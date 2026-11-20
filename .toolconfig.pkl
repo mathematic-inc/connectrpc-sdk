@@ -13,5 +13,43 @@ toolconfig {
 }
 
 sections {
+  ["*"] {
+    oxlint {
+      rules {
+        ["typescript/prefer-readonly-parameter-types"] {
+          "deny"
+          new {
+            allow =
+              List(
+                // Descriptors and plugin messages, which the library declares mutable.
+                new Dynamic {
+                  from = "package"
+                  `package` = "@bufbuild/protobuf"
+                  name =
+                    List(
+                      "CodeGeneratorRequest",
+                      "CodeGeneratorResponse_File",
+                      "DescFile",
+                      "DescMethod",
+                      "DescService",
+                    )
+                },
+                // The plugin API passes a schema and a file sink, which have methods.
+                new Dynamic {
+                  from = "package"
+                  `package` = "@bufbuild/protoplugin"
+                  name = List("GeneratedFile", "Schema")
+                },
+                // The rule rejects the methods of the read-only collection types.
+                new Dynamic {
+                  from = "lib"
+                  name = List("ReadonlyMap")
+                },
+              )
+          }
+        }
+      }
+    }
+  }
   ["*.proto"] { buf { modules { new { path = "proto" } } } }
 }
